@@ -24,6 +24,10 @@
 
 * Confirm everything works by running `Cypress`
 
+  ```bash
+  npm run e2e
+  ```
+
 ### Generate Entities
 
 * Import Blog JDL from [start.jhipster.tech](https://start.jhipster.tech)
@@ -56,15 +60,53 @@
   paginate Post, Tag with infinite-scroll
   ```
 
+* Run the following command using the previous file imported
+
   `jhipster jdl blog.jdl`
 
 * Restart application and show pre-loaded data
 
 * Turn off `faker` in `application-dev.yml` and `rm -rf target/h2db`
 
+  ```yaml
+  liquibase:
+  # Add 'faker' if you want the sample data to be loaded automatically
+  contexts: dev
+  ```
+
 * Create a couple of blogs and entries for `admin` and `user`
 
 * Show how `admin` and `user` share data
+
+### Create custom Entity
+
+For each entity you want to create, you will need:
+
+* a database table;
+* a Liquibase changeset;
+* a JPA entity class;
+* a Spring Data `JpaRepository` interface;
+* a Spring MVC `RestController` class;
+* an Angular list component, edit component, service; and
+* several HTML pages for each component.
+
+Create an entity using the following steps
+
+* Create an entity using the command line
+
+  ```bash
+  # Ruj the following command
+  jhipster entity book
+  ```
+
+  Answer the next questions concerning the fields of this entity, the book has:
+
+  * “title”, of type “String”
+  * “description”, of type “String”
+  * “publicationDate”, of type “LocalDate”
+  * “price”, of type “BigDecimal”
+
+* Check the current `entity` (domain) and `liquibase` migration files.
 
 ### Add Business Logic
 
