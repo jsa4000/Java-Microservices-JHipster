@@ -1,8 +1,23 @@
 # Develop Java Microservices With JHipster
 
+* [R.A.D.](https://en.wikipedia.org/wiki/Rapid_application_development)
 * [Yeoman Generator](https://yeoman.io/generators/)
 * [JHipster Generator](https://www.jhipster.tech/)
-* [R.A.D.](https://en.wikipedia.org/wiki/Rapid_application_development)
+
+## Installation
+
+In order to use JHipster, following requirements are needed:
+
+* **Java 11** (Openjdk, sdkman, etc...)
+* **Node.js** from the Nodejs website (LTS 64-bit version)
+* **JHipster** globally installation. `npm install -g generator-jhipster`
+* **Yeoman**, If you want to use a module or a blueprint. `npm install -g yo`
+
+Optional installations:
+
+* **Java build tool** depending on preferences or requirements use `Maven` or `Gradle`
+* **Git** from git-scm.com. Use a tool like `SourceTree` if you are starting with Git.
+* **Docker** to be able to use container images to run a local environment
 
 ## Monolith Sample
 
@@ -11,6 +26,16 @@
 * Create a `blog` directory and create a JHipster app in it
 
   ```bash
+  # Create an empty folder
+  mkdir monolith-jhipster
+
+  # Execute following command
+  cd monolith-jhipster
+  jhipster
+  ```
+
+  ```bash
+  # Use following settings or default values for unknown fields
   applicationType: monolith
   name: blog
   package: org.jhipster.blog
@@ -20,17 +45,31 @@
   testFrameworks: Cypress
   ```
 
-* Start app using `./mvnw`, browse through admin features
+* Check the `.yo-rc.json` file jhipster settings and values and `README.md` file.
 
+* Start the application using `./mvnw`
+
+* Browse through `Administrator` features (`admin/admin)` in the [dashboard](http://localhost:8080)
 * Confirm everything works by running `Cypress`
+
+  > Server must be running at http://localhost:8080
 
   ```bash
   npm run e2e
   ```
 
+* Check JHipster generated code best features:
+
+  * Patterns, AOP, Error handlers, Logging, etc..
+  * Controllers, Repositories, Services, Entities
+  * Migration, Faker data, Liquisbase
+  * Build tool files (pom), Docker files, internalization, etc..
+  * Configuration files
+  * Boilerplate code generated and libraries used in the project.
+
 ### Generate Entities
 
-* Import Blog JDL from [start.jhipster.tech](https://start.jhipster.tech)
+* Import Blog JDL from [JHipster JDL Studio](https://start.jhipster.tech/jdl-studio/)
 
   ```csharp
   entity Blog {
@@ -62,9 +101,15 @@
 
 * Run the following command using the previous file imported
 
+  > Use `a` option to overwrite all the files.
+
   `jhipster jdl blog.jdl`
 
-* Restart application and show pre-loaded data
+* Check source code generated and compare with previous version (red color))
+
+* Check the `.jhipster` folder to track the entities.
+
+* Restart application and show *pre-loaded* data using `./mvnw`
 
 * Turn off `faker` in `application-dev.yml` and `rm -rf target/h2db`
 
@@ -78,12 +123,19 @@
 
 * Show how `admin` and `user` share data
 
+* Commit changes into local git repository to compare with previous version. `Pre-hooks` are enabled by default.
+
+  ```bash
+  git add .
+  git commit -m "Updated Blog Entities"
+  ```
+
 ### Create custom Entity
 
-For each entity you want to create, you will need:
+For each entity you want to create:
 
 * a database table;
-* a Liquibase changeset;
+* a *Liquibase* changeset;
 * a JPA entity class;
 * a Spring Data `JpaRepository` interface;
 * a Spring MVC `RestController` class;
@@ -106,7 +158,11 @@ Create an entity using the following steps
   * “publicationDate”, of type “LocalDate”
   * “price”, of type “BigDecimal”
 
+* Check the with the new entities created
+
 * Check the current `entity` (domain) and `liquibase` migration files.
+
+* Restart application and show *pre-loaded* data using `./mvnw`
 
 ### Add Business Logic
 
@@ -131,6 +187,22 @@ Create an entity using the following steps
 * Allow HTML in entries with `[innerHTML]="post.content"`
 
 * Improve entry layout to look like a blog
+
+### Code quality
+
+Sonar is used to analyse code quality. You can start a local Sonar server (accessible on http://localhost:9001) with:
+
+```bash
+docker-compose -f src/main/docker/sonar.yml up
+```
+
+You can run a Sonar analysis with using the [sonar-scanner](https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner) or by using the maven plugin.
+
+Then, run a Sonar analysis:
+
+```bash
+./mvnw -Pprod clean verify sonar:sonar
+```
 
 ### Generate CI-CD
 
@@ -245,3 +317,20 @@ Create an entity using the following steps
     to
 
     `"workbox-webpack-plugin": "6.2.4"`
+
+* Error: `Require statement not part of import statement  @typescript-eslint/no-var-requires`
+  
+  Try to remove that line since it is an experimental feature on jhipster 7 that allows compute code coverage using `Cypress`. However it seems not working using `Sonar` code quality rules.
+
+  You can disable this check in `.eslintrc.js` file
+
+  ```js
+  module.exports = {
+    ...
+    rules: {
+      ...
+      "@typescript-eslint/no-var-requires": 0,
+    }
+  }
+  ```
+
